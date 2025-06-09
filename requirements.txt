@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+pytz
+databases[sqlite]
+sqlalchemy
