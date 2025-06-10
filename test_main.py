@@ -18,10 +18,10 @@ def test_book_class():
     payload = {
         "class_id": class_id,
         "client_name": "Elumalai",
-        "client_email": f"test_{uuid.uuid4()}@mail.com"  # 🔄 Unique email per run
+        "client_email": f"test_{uuid.uuid4()}@mail.com"  # Unique email per run
     }
     res = client.post("/book", json=payload)
-    print("RESPONSE:", res.status_code, res.json())  # Optional for debugging
+    print("RESPONSE:", res.status_code, res.json())
     assert res.status_code == 200
 
 def test_duplicate_email_blocked():

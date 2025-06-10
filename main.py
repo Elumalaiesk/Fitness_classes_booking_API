@@ -2,19 +2,15 @@ from fastapi import FastAPI, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from schemas import ClassResponse, BookingRequest, BookingResponse
-
 import pytz
 from datetime import timezone
-
 from database import SessionLocal, engine, Base
 from models import FitnessClass, Booking
-from schemas import ClassResponse, BookingRequest, BookingResponse
 from seed_data import seed_classes
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
 
 # Dependency to get DB session per request
 def get_db():
@@ -33,9 +29,21 @@ def startup_event():
     db.close()
 
 @app.get("/classes", response_model=List[ClassResponse])
-def get_classes(db: Session = Depends(get_db)):
+def get_classes(
+    db: Session = Depends(get_db),
+    user_tz: str = Query("Asia/Kolkata")  # default fallback
+):
     classes = db.query(FitnessClass).all()
-    return classes 
+    try:
+        target_tz = pytz.timezone(user_tz)
+    except pytz.UnknownTimeZoneError:
+        raise HTTPException(status_code=400, detail="Invalid timezone")
+
+    for cls in classes:
+        cls.datetime = cls.datetime.astimezone(target_tz)  # convert to user's TZ
+
+    return classes
+
 @app.post("/book", response_model=BookingResponse)
 def book_class(booking: BookingRequest, db: Session = Depends(get_db)):
     selected_class = db.query(FitnessClass).filter(FitnessClass.id == booking.class_id).first()
@@ -107,8 +115,3 @@ def get_bookings(email: str = Query(...), db: Session = Depends(get_db)):
             ))
 
     return responses
-
-# @app.get("/all-bookings", response_model=List[BookingResponse])
-# def get_all_bookings(db: Session = Depends(get_db)):
-#     bookings = db.query(Booking).all()
-#     return bookings
