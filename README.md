@@ -10,7 +10,7 @@
 2. Activate virtual environment
 
    ```bash
-   venv\Scripts\activate
+   fitness_env\Scripts\activate
    ```
 
 3. Install required packages
