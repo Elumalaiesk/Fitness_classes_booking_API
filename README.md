@@ -1,4 +1,4 @@
-## 🛠️ Setup & Run Instructions
+## Setup & Run Instructions
 
 1. Clone the repository
 
