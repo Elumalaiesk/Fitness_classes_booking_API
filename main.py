@@ -82,9 +82,10 @@ def book_class(booking: BookingRequest, db: Session = Depends(get_db)):
     db.refresh(new_booking)
 
     return BookingResponse(
+        id=new_booking.id,
         class_id=new_booking.class_id,
-        class_name=selected_class.name,        # ✔️ add this
-        class_time=selected_class.datetime,    # ✔️ and this
+        class_name=selected_class.name,       
+        class_time=selected_class.datetime,   
         client_name=new_booking.client_name,
         client_email=new_booking.client_email
     )
