@@ -1,7 +1,3 @@
-Got it, Mr. Stark. Here's your concise **README setup section** with just the steps:
-
----
-
 ## 🛠️ Setup & Run Instructions
 
 1. Clone the repository
